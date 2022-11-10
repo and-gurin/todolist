@@ -19,13 +19,12 @@ function App() {
         {id: v1(), title: 'What to fuck', isDone: true},
         {id: v1(), title: 'What to build', isDone: true}
     ])
-    let [filter, setFilter] = useState('completed')
+    let [filter, setFilter] = useState('all')
 
     const DeleteTask = (id:string) => {
          tasks = tasks.filter((item)=>item.id !== id)
         setTasks(tasks)
     }
-
     const TasksFilter = (isDone: FilterIsDoneType) => {
         setFilter(isDone)
     }
@@ -45,6 +44,14 @@ function App() {
         setTasks(newTasks);
     }
 
+    const changeTaskStatus = (id: string, isDone: boolean)=>{
+        let changedTask =  tasks.find((t)=>t.id === id)
+        if(changedTask){
+            changedTask.isDone = isDone;
+        }
+        setTasks([...tasks])
+    }
+
     return (
         <div className="App">
             <TodoList
@@ -52,6 +59,8 @@ function App() {
                 deleteTask={DeleteTask}
                 tasksFilter={TasksFilter}
                 tasks={taskForTodoList}
+                changeTaskStatus={changeTaskStatus}
+                filter={filter}
                 title={'What to learn'}/>
         </div>
     );
