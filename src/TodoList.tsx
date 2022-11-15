@@ -3,13 +3,15 @@ import {FilterIsDoneType, TaskType} from "./App";
 import './App.css';
 
 type PropsType = {
+    id: string
     title: string
     tasks: Array<TaskType>
-    deleteTask:(id:string)=>void
-    tasksFilter: (isDone: FilterIsDoneType)=>void
-    addTask:(title: string)=>void
-    changeTaskStatus:(id:string, isDone: boolean)=> void
+    deleteTask:(id:string, todoListId: string)=>void
+    tasksFilter: (isDone: FilterIsDoneType, todoListId:string)=>void
+    addTask:(title: string, todoListId: string)=>void
+    changeTaskStatus:(id:string, isDone: boolean, todoListId: string)=> void
     filter: string
+    removeTodoList:(todoListId: string)=>void
 }
 
 export function TodoList(props: PropsType) {
@@ -18,7 +20,7 @@ export function TodoList(props: PropsType) {
 
     const addTask = () => {
         if(title.trim()!==''){
-            props.addTask(title.trim());
+            props.addTask(title.trim(), props.id);
             setTitle('')
 
         } else {
@@ -37,17 +39,23 @@ export function TodoList(props: PropsType) {
         }
     }
     const onAllClickHandler = () => {
-        props.tasksFilter('all')
+        props.tasksFilter('all', props.id)
     }
     const onActiveClickHandler = () => {
-        props.tasksFilter('active')
+        props.tasksFilter('active', props.id)
     }
     const onCompletedClickHandler = () => {
-        props.tasksFilter('completed')
+        props.tasksFilter('completed', props.id)
+    }
+    const deleteTodoList = () => {
+        props.removeTodoList(props.id)
     }
     return (
         <div>
-            <h3>{props.title}</h3>
+            <h3>
+                {props.title}
+                <button onClick={deleteTodoList}>✖</button>
+            </h3>
             <div>
                 <input value={title}
                        className={error?'error':''}
@@ -59,11 +67,11 @@ export function TodoList(props: PropsType) {
             <ul>
                 {props.tasks.map((item)=>{
                     const deleteTask = () => {
-                        props.deleteTask(item.id)
+                        props.deleteTask(item.id, props.id)
                     }
                     const newIsDoneValue = (e:ChangeEvent<HTMLInputElement>) => {
                         const newValue = e.currentTarget.checked;
-                        props.changeTaskStatus(item.id, newValue)
+                        props.changeTaskStatus(item.id, newValue, props.id)
                     }
                     return (
                         <li className={item.isDone?'isDone':''} key={item.id}>
