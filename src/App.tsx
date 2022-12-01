@@ -34,6 +34,33 @@ function App() {
         {id: todoListId2, title: 'What to learn', filter: 'all'},
     ])
 
+    const removeTodoList = (todoListId: string) => {
+        setTodoLists(todoLists.filter((item) => item.id !== todoListId));
+        delete tasks[todoListId]
+    }
+
+    const addTodoList = (title: string, id: string) => {
+        const newTodoList = {id: id, title: title, filter: 'all'};
+        setTodoLists([newTodoList, ...todoLists])
+        setTasks({...tasks, [id]: []})
+    }
+
+    const editTodoListTitle = (title: string, todoListId: string) => {
+        let todoList = todoLists.find((t) => t.id === todoListId);
+        if (todoList) {
+            todoList.title = title
+        }
+        setTodoLists([...todoLists])
+    }
+
+    const TodoListsFilter = (isDone: FilterIsDoneType, todoListId: string) => {
+        let todoList = todoLists.find((t) => t.id === todoListId);
+        if (todoList) {
+            todoList.filter = isDone;
+        }
+        setTodoLists([...todoLists])
+    }
+
     let [tasks, setTasks] = useState<TaskStateType>({
             [todoListId1]: [
                 {id: v1(), title: 'FreeCodeCamp es6', isDone: true},
@@ -52,18 +79,6 @@ function App() {
         tasks[todoListId] = tasksForTodolist.filter((item) => item.id !== id)
         setTasks({...tasks})
     }
-    const TasksFilter = (isDone: FilterIsDoneType, todoListId: string) => {
-        let todoList = todoLists.find((t) => t.id === todoListId);
-        if (todoList) {
-            todoList.filter = isDone;
-        }
-        setTodoLists([...todoLists])
-    }
-
-    const removeTodoList = (todoListId: string) => {
-        setTodoLists(todoLists.filter((item) => item.id !== todoListId));
-        delete tasks[todoListId]
-    }
 
     const addTask = (title: string, todoListId: string) => {
         const newTask = {id: v1(), title: title, isDone: false};
@@ -79,26 +94,12 @@ function App() {
         setTasks({...tasks})
     }
 
-    const addTodoList = (title: string, id: string) => {
-        const newTodoList = {id: id, title: title, filter: 'all'};
-        setTodoLists([newTodoList, ...todoLists])
-        setTasks({...tasks, [id]: []})
-    }
-
     const editTaskTitle = (id: string, title: string, todoListId: string) => {
         let task = tasks[todoListId].find((t) => t.id === id)
         if (task) {
             task.title = title;
         }
         setTasks({...tasks})
-    }
-
-    const editTodoListTitle = (title: string, todoListId: string) => {
-        let todoList = todoLists.find((t) => t.id === todoListId);
-        if (todoList) {
-            todoList.title = title
-        }
-        setTodoLists([...todoLists])
     }
 
     return (
@@ -137,7 +138,7 @@ function App() {
                                         id={item.id}
                                         addTask={addTask}
                                         deleteTask={DeleteTask}
-                                        tasksFilter={TasksFilter}
+                                        TodoListsFilter={TodoListsFilter}
                                         tasks={taskForTodoList}
                                         changeTaskStatus={changeTaskStatus}
                                         removeTodoList={removeTodoList}
