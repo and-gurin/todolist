@@ -112,19 +112,11 @@ export function AppWithReducers() {
             </AppBar>
             <Container fixed>
                 <Grid container style={{padding:"20px"}}>
-                    <AddItemForm id={v1()} addItemCallback={addTodoList}/>
+                    <AddItemForm addItemCallback={addTodoList}/>
                 </Grid>
                 <Grid container>
                     {todoLists.map((item) => {
-                        let taskForTodoList = tasks[item.id];
 
-                        if (item.filter === 'active') {
-                            taskForTodoList = tasks[item.id].filter((item) => !item.isDone)
-                        }
-
-                        if (item.filter === 'completed') {
-                            taskForTodoList = tasks[item.id].filter((item) => item.isDone)
-                        }
                         return (
                             <Grid item>
                                 <Paper style={{padding:"10px"}}>
@@ -134,7 +126,7 @@ export function AppWithReducers() {
                                         addTask={addTask}
                                         deleteTask={DeleteTask}
                                         TodoListsFilter={TodoListsFilter}
-                                        tasks={taskForTodoList}
+                                        tasks={tasks}
                                         changeTaskStatus={changeTaskStatus}
                                         removeTodoList={removeTodoList}
                                         filter={item.filter}

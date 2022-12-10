@@ -3,17 +3,17 @@ import {IconButton, TextField} from "@mui/material";
 import {AddBox} from "@mui/icons-material";
 
 type AddItemFormPropsType = {
-    id: string
-    addItemCallback: (title: string, id: string) => void
+    addItemCallback: (title: string) => void
 }
 
-export const AddItemForm = (props: AddItemFormPropsType) => {
+export const AddItemForm = React.memo ((props: AddItemFormPropsType) => {
+    console.log("Add item form called")
     let [title, setTitle] = useState('');
     let [error, setError] = useState<string | null>(null)
 
     const addItem = () => {
         if (title.trim() !== '') {
-            props.addItemCallback(title.trim(), props.id);
+            props.addItemCallback(title.trim());
             setTitle('')
 
         } else {
@@ -22,9 +22,11 @@ export const AddItemForm = (props: AddItemFormPropsType) => {
     }
 
     const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+        if (error !== null){
+            setError(null)
+        }
         const value = e.currentTarget.value;
         setTitle(value)
-        setError(null)
     }
 
     const onKeyPressHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -46,8 +48,7 @@ export const AddItemForm = (props: AddItemFormPropsType) => {
                     <AddBox/>
                 </IconButton>
             </div>
-            {/*{error && <div className='error-message'>{error}</div>}*/}
         </div>
 
     )
-}
+})
